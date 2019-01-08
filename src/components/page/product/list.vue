@@ -95,7 +95,7 @@
         </el-form-item>
         <el-form-item label="商品名称" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="form.title" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="商品规格" :label-width="formLabelWidth">
@@ -175,7 +175,7 @@ export default {
       ],
       productFormVisible: false,
       form: {
-        name: "",
+        title: "",
         salesType: "",
         size: "",
         price: "",
