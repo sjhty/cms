@@ -61,13 +61,13 @@
       </div>
     </el-form>
     <el-table :data="userData" style="width: 100%" border>
-      <el-table-column prop="id" label="商品ID" align="center" width="50"></el-table-column>
-      <el-table-column prop="sku" label="商品SKU" align="center"></el-table-column>
+      <el-table-column prop="id" label="商品ID" align="center" width="80"></el-table-column>
+      <!-- <el-table-column prop="sku" label="商品SKU" align="center"></el-table-column> -->
       <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
-      <el-table-column prop="price" label="零售价" align="center"></el-table-column>
+      <el-table-column prop="price" label="零售价" align="center" width="80"></el-table-column>
       <el-table-column prop="size" label="规格" align="center" width="50"></el-table-column>
       <el-table-column prop="stock" label="库存" align="center" width="50"></el-table-column>
-      <el-table-column prop="salesType" label="销售类型" align="center"></el-table-column>
+      <!-- <el-table-column prop="salesType" label="销售类型" align="center"></el-table-column> -->
       <el-table-column prop="supplier" label="供货商" align="center"></el-table-column>
       <el-table-column prop="createTime" label="创建日期" align="center"></el-table-column>
       <el-table-column prop="modifyTime" label="修改日期" align="center"></el-table-column>
@@ -81,7 +81,7 @@
     </el-table>
     <el-dialog title="添加商品" :visible.sync="productFormVisible" width="40%">
       <el-form :model="form">
-        <el-form-item label="销售类型" :label-width="formLabelWidth">
+        <!-- <el-form-item label="销售类型" :label-width="formLabelWidth">
           <el-col :span="12">
             <el-select v-model="form.salesType" placeholder="请选择">
               <el-option
@@ -92,7 +92,7 @@
               ></el-option>
             </el-select>
           </el-col>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="商品名称" :label-width="formLabelWidth">
           <el-col :span="16">
             <el-input v-model="form.title" autocomplete="off"></el-input>
@@ -108,6 +108,11 @@
             <el-input v-model="form.price" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
+        <el-form-item label="数量" :label-width="formLabelWidth">
+          <el-col :span="16">
+            <el-input v-model="form.stock" autocomplete="off"></el-input>
+          </el-col>
+        </el-form-item>
         <el-form-item label="供货商" :label-width="formLabelWidth">
           <el-col :span="16">
             <el-input v-model="form.supplier" autocomplete="off"></el-input>
@@ -115,8 +120,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button @click="productFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="productFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
