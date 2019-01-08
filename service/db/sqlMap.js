@@ -1,11 +1,11 @@
 var sqlMap = {
     user: {
-        add: 'insert into user (username, password, nickname) values (?,?,?)',
+        add: 'insert into user (name, password, nickname) values (?,?,?)',
         select_name: 'select * from user', 
         update_user: 'update user set'
     },
     product: {
-        add: 'insert into user (sku, title, price, size, stock, salesType, supplier) values (?,?,?,?,?,?,?)',
+        add: 'insert into product (title, size, price, stock, supplier) values (?,?,?,?,?)',
         select_name: 'select * from user', 
         update_user: 'update user set'
     }

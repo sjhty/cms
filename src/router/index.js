@@ -8,6 +8,7 @@ const Dashboard = resolve => require(['@/components/page/dashboard'], resolve)
 const UserList = resolve => require(['@/components/page/user/list'], resolve)
 const AddUser = resolve => require(['@/components/page/user/add'], resolve)
 const ProductList = resolve => require(['@/components/page/product/list'], resolve)
+const test = resolve => require(['@/components/HelloWorld'], resolve)
 
 export default new Router({
   routes: [
@@ -42,6 +43,16 @@ export default new Router({
       iconCls: 'iconfont icon-shangpinguanli', // 图标样式class
       children: [
         {path: '/product/list', component: ProductList, name: '商品查询', menuShow: true},
+      ]
+    },
+    {
+      path: '/',
+      name: 'test',
+      component: Home,
+      menuShow: true,
+      iconCls: 'iconfont icon-shangpinguanli', // 图标样式class
+      children: [
+        {path: '/test', component: test, name: 'test', menuShow: true},
       ]
     },
   ]

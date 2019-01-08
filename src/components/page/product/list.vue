@@ -31,20 +31,6 @@
               </el-col>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="销售类型">
-              <el-col :span="12">
-                <el-select v-model="form.salesType" placeholder="请选择">
-                  <el-option
-                    v-for="item in saleOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-          </el-col>
         </el-form-item>
         <el-form-item>
           <el-col :span="3">
@@ -80,48 +66,36 @@
       </el-table-column>
     </el-table>
     <el-dialog title="添加商品" :visible.sync="productFormVisible" width="40%">
-      <el-form :model="form">
-        <!-- <el-form-item label="销售类型" :label-width="formLabelWidth">
-          <el-col :span="12">
-            <el-select v-model="form.salesType" placeholder="请选择">
-              <el-option
-                v-for="item in saleOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-col>
-        </el-form-item> -->
+      <el-form :model="productForm" ref="productForm">
         <el-form-item label="商品名称" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="form.title" autocomplete="off"></el-input>
+            <el-input v-model="productForm.title" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="商品规格" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="form.size" autocomplete="off"></el-input>
+            <el-input v-model="productForm.size" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="零售价" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="form.price" autocomplete="off"></el-input>
+            <el-input v-model="productForm.price" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="数量" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="form.stock" autocomplete="off"></el-input>
+            <el-input v-model="productForm.stock" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="供货商" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="form.supplier" autocomplete="off"></el-input>
+            <el-input v-model="productForm.supplier" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="productFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="productFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="productAdd('productForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -179,18 +153,36 @@ export default {
         }
       ],
       productFormVisible: false,
-      form: {
+      productForm: {
         title: "",
-        salesType: "",
         size: "",
-        price: "",
+        price: 0,
+        stock:0,
         supplier: ""
       },
       formLabelWidth: "120px"
     };
   },
   methods: {
-    handleClick() {}
+    handleClick() {},
+
+    productAdd(formName) {
+      const self = this;
+                self.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        console.log(JSON.stringify(self.productForm));                        
+                        self.$http.post('/api/product/addProduct',JSON.stringify(self.productForm))
+                        .then((response) => {
+                            console.log(response);                         
+                        }).then((error) => {
+                            console.log(error);
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+    }
   }
 };
 </script>
