@@ -6,8 +6,8 @@
     
 </template>
 <style>
-.logo {width: 20%;}
-.logo img {width:70px;vertical-align: bottom;margin-right: 20px;}
+.logo {width: 30%;text-align: left;}
+.logo img {width:70px;vertical-align: bottom;margin-right: 10px;}
 .logo span {font-size: 30px;font-weight: bold;vertical-align: bottom;letter-spacing: 2px;}
 </style>
 
