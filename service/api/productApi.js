@@ -81,7 +81,7 @@ router.post('/updateProductById', (req, res) => {
     var sql = $sql.product.update;
     var params = req.body;
     if (params.id) {
-        sql += "where id = " + params.id
+        sql += "title = "+ params.title +" where id = " + params.id
     }
     conn.query(sql, function(err, result) {
         if (err) {
