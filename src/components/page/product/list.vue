@@ -53,7 +53,7 @@
       <el-table-column fixed="right" label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button @click="searchProductById(scope.row.id)" type="text" size="small">查看</el-button>
-          <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
+          <el-button @click="updateProductById(scope.row.id)" type="text" size="small">修改</el-button>
           <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -94,7 +94,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="productFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="productAdd('productForm')" v-if="button.showAddButton">添 加</el-button>
-        <el-button type="primary" @click="productAdd('productForm')" v-if="button.showUpdateButton">修 改</el-button>
+        <el-button type="primary" @click="updateproduct('productForm')" v-if="button.showUpdateButton">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -186,6 +186,25 @@ export default {
           self.productForm = response.body[0];
           self.productFormVisible = true;
           self.button.showAddButton = false;
+        })
+        .then(error => {
+          console.log(error);
+        });
+    },
+
+    updateProductById(pid) {
+      const self = this;
+      self.searchProductById(pid);
+      self.button.showUpdateButton = true;
+    },
+
+    updateproduct(formName) {
+      const self = this;
+      self.$http
+        .post("/api/product/updateProductById", JSON.stringify(self.productForm))
+        .then(response => {
+          console.log(response);
+          self.productFormVisible = false;
         })
         .then(error => {
           console.log(error);

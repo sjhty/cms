@@ -7,7 +7,7 @@ var sqlMap = {
     product: {
         add: 'insert into product (title, size, imgUrl, price, stock, supplier) values (?,?,?,?,?,?)',
         select: 'select * from product ', 
-        update: 'update user set'
+        update: 'update product set '
     }
 }
 
