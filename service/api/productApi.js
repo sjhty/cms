@@ -21,12 +21,69 @@ var dateStr = function(str) {
     return new Date(str.slice(0,7));
 }
 
-// 增加用户接口
+// 增加商品接口
 router.post('/addProduct', (req, res) => {
     var sql = $sql.product.add;
     var params = req.body;
     console.log(params);
-    conn.query(sql, [params.title, params.size, params.price,params.stock,params.supplier], function(err, result) {
+    conn.query(sql, [params.title, params.size, params.imgUrl, params.price, params.stock, params.supplier], function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        if (result) {
+            jsonWrite(res, result);
+        }
+    })
+});
+
+// 条件查询商品接口
+router.post('/searchProduct', (req, res) => {
+    var sql = $sql.product.select;
+    var params = req.body;
+    if (params.id && params.title) {
+        sql += " where id = " + params.id + " and title like '%" + params.title +"%'"
+    } else {
+        if (params.id) {
+            sql += "where id = " + params.id
+        } else if (params.title) {
+            sql += "where title like '%" + params.title +"%'"
+        }
+    }
+    conn.query(sql, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        if (result) {
+            jsonWrite(res, result);
+        }
+    })
+});
+
+// ID查询商品接口
+router.post('/searchProductById', (req, res) => {
+    var sql = $sql.product.select;
+    var params = req.body;
+    if (params.id) {
+        sql += "where id = " + params.id
+    }
+    conn.query(sql, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        if (result) {
+            jsonWrite(res, result);
+        }
+    })
+});
+
+// ID修改商品接口
+router.post('/updateProductById', (req, res) => {
+    var sql = $sql.product.update;
+    var params = req.body;
+    if (params.id) {
+        sql += "where id = " + params.id
+    }
+    conn.query(sql, function(err, result) {
         if (err) {
             console.log(err);
         }

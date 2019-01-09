@@ -26,7 +26,6 @@ router.post('/addUser', (req, res) => {
     var sql = $sql.user.add;
     var params = req.body;
     console.log(params);
-    console.log(params.birth);
     conn.query(sql, [params.name, params.password, params.nickname,], function(err, result) {
         if (err) {
             console.log(err);

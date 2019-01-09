@@ -5,9 +5,9 @@ var sqlMap = {
         update_user: 'update user set'
     },
     product: {
-        add: 'insert into product (title, size, price, stock, supplier) values (?,?,?,?,?)',
-        select_name: 'select * from user', 
-        update_user: 'update user set'
+        add: 'insert into product (title, size, imgUrl, price, stock, supplier) values (?,?,?,?,?,?)',
+        select: 'select * from product ', 
+        update: 'update user set'
     }
 }
 

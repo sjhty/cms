@@ -7,40 +7,33 @@
       </el-breadcrumb-item>
       <el-breadcrumb-item>商品查询</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-form class="form-border">
+    <el-form class="form-border" :model="searchForm" ref="searchForm">
       <div class="serchParam">
         <el-form-item>
           <el-col :span="5">
             <el-form-item label="商品ID">
               <el-col :span="15">
-                <el-input placeholder="请输入商品ID"></el-input>
-              </el-col>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="商品SKU">
-              <el-col :span="17">
-                <el-input placeholder="请输入商品SKU"></el-input>
+                <el-input placeholder="请输入商品ID" v-model="searchForm.id"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
           <el-col :span="7">
             <el-form-item label="商品名称">
               <el-col :span="35">
-                <el-input placeholder="请输入商品名称"></el-input>
+                <el-input placeholder="请输入商品名称" v-model="searchForm.title"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
         </el-form-item>
         <el-form-item>
           <el-col :span="3">
-            <el-button type="primary" icon="el-icon-search">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="searchProduct('searchForm')">搜索</el-button>
           </el-col>
           <el-col :span="2">
             <el-button
               type="primary"
               icon="el-icon-circle-plus-outline"
-              @click="productFormVisible = true"
+              @click="productFormVisible = true,button.showAddButton = true,productForm = {}"
             >添加商品</el-button>
           </el-col>
         </el-form-item>
@@ -55,11 +48,11 @@
       <el-table-column prop="stock" label="库存" align="center" width="50"></el-table-column>
       <!-- <el-table-column prop="salesType" label="销售类型" align="center"></el-table-column> -->
       <el-table-column prop="supplier" label="供货商" align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建日期" align="center"></el-table-column>
-      <el-table-column prop="modifyTime" label="修改日期" align="center"></el-table-column>
+      <el-table-column prop="createTime" label="创建日期" align="center" :formatter="dateFormat"></el-table-column>
+      <el-table-column prop="modifyTime" label="修改日期" align="center" :formatter="dateFormat"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150" align="center">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button @click="searchProductById(scope.row.id)" type="text" size="small">查看</el-button>
           <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
           <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
         </template>
@@ -75,6 +68,11 @@
         <el-form-item label="商品规格" :label-width="formLabelWidth">
           <el-col :span="16">
             <el-input v-model="productForm.size" autocomplete="off"></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="商品图片" :label-width="formLabelWidth">
+          <el-col :span="16">
+            <el-input v-model="productForm.imgUrl" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="零售价" :label-width="formLabelWidth">
@@ -95,7 +93,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="productFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="productAdd('productForm')">确 定</el-button>
+        <el-button type="primary" @click="productAdd('productForm')" v-if="button.showAddButton">添 加</el-button>
+        <el-button type="primary" @click="productAdd('productForm')" v-if="button.showUpdateButton">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -104,44 +103,7 @@
 export default {
   data() {
     return {
-      userData: [
-        {
-          id: 1,
-          sku: "40000340020",
-          title: "樱桃裤",
-          price: "120",
-          size: "红黑 X",
-          stock: "100",
-          salesType: "艾诗塔",
-          supplier: "艾诗塔",
-          createTime: "2019-01-08 13:49:30",
-          modifyTime: ""
-        },
-        {
-          id: 2,
-          sku: "40000340021",
-          title: "坚果裤",
-          price: "220",
-          size: "红黑 X",
-          stock: "100",
-          salesType: "艾诗塔",
-          supplier: "艾诗塔",
-          createTime: "2019-01-08 13:49:30",
-          modifyTime: ""
-        },
-        {
-          id: 3,
-          sku: "40000340022",
-          title: "润肤衣",
-          price: "320",
-          size: "肤色 X",
-          stock: "100",
-          salesType: "艾诗塔",
-          supplier: "艾诗塔",
-          createTime: "2019-01-08 13:49:30",
-          modifyTime: ""
-        },
-      ],
+      userData: [],
       saleOptions: [
         {
           value: "1",
@@ -153,14 +115,23 @@ export default {
         }
       ],
       productFormVisible: false,
+      searchForm: {
+        id: "",
+        title: ""
+      },
       productForm: {
         title: "",
         size: "",
+        imgUrl: "",
         price: 0,
-        stock:0,
+        stock: 0,
         supplier: ""
       },
-      formLabelWidth: "120px"
+      formLabelWidth: "120px",
+      button: {
+        showAddButton: true,
+        showUpdateButton: false
+      }
     };
   },
   methods: {
@@ -168,20 +139,62 @@ export default {
 
     productAdd(formName) {
       const self = this;
-                self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        console.log(JSON.stringify(self.productForm));                        
-                        self.$http.post('/api/product/addProduct',JSON.stringify(self.productForm))
-                        .then((response) => {
-                            console.log(response);                         
-                        }).then((error) => {
-                            console.log(error);
-                        })
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
+      self.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(JSON.stringify(self.productForm));
+          self.$http
+            .post("/api/product/addProduct", JSON.stringify(self.productForm))
+            .then(response => {
+              console.log(response);
+              self.productFormVisible = false;
+            })
+            .then(error => {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    searchProduct(formName) {
+      const self = this;
+      self.$refs[formName].validate(valid => {
+        if (valid) {
+          self.$http
+            .post("/api/product/searchProduct", JSON.stringify(self.searchForm))
+            .then(response => {
+              self.userData = response.body;
+            })
+            .then(error => {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    searchProductById(pid) {
+      const self = this;
+      self.$http
+        .post("/api/product/searchProductById", JSON.stringify({ id: pid }))
+        .then(response => {
+          console.log(response);
+          self.productForm = response.body[0];
+          self.productFormVisible = true;
+          self.button.showAddButton = false;
+        })
+        .then(error => {
+          console.log(error);
+        });
+    },
+
+    dateFormat(row, column) {
+      let tempTime = row.createTime;
+      return tempTime.replace("T", " ").replace(".000Z", "");
     }
   }
 };
