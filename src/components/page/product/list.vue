@@ -33,7 +33,7 @@
             <el-button
               type="primary"
               icon="el-icon-circle-plus-outline"
-              @click="productFormVisible = true,button.showAddButton = true,productForm = {}"
+              @click="productFormVisible = true,button.showAddButton = true,button.showUpdateButton = true,productForm = {}"
             >添加商品</el-button>
           </el-col>
         </el-form-item>
@@ -54,7 +54,7 @@
         <template slot-scope="scope">
           <el-button @click="searchProductById(scope.row.id)" type="text" size="small">查看</el-button>
           <el-button @click="updateProductById(scope.row.id)" type="text" size="small">修改</el-button>
-          <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+          <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -204,6 +204,21 @@ export default {
         .post("/api/product/updateProductById", JSON.stringify(self.productForm))
         .then(response => {
           console.log(response);
+          self.searchProduct(formName);
+          self.productFormVisible = false;
+        })
+        .then(error => {
+          console.log(error);
+        });
+    },
+
+    deleteProductById(pid) {
+      const self = this;
+      self.$http
+        .post("/api/product/deteleProductById", JSON.stringify(self.productForm))
+        .then(response => {
+          console.log(response);
+          self.searchProduct(formName);
           self.productFormVisible = false;
         })
         .then(error => {

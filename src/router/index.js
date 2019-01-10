@@ -9,6 +9,7 @@ const UserList = resolve => require(['@/components/page/user/list'], resolve)
 const AddUser = resolve => require(['@/components/page/user/add'], resolve)
 const ProductList = resolve => require(['@/components/page/product/list'], resolve)
 const test = resolve => require(['@/components/HelloWorld'], resolve)
+const Order = resolve => require(['@/components/page/order/order'], resolve)
 
 export default new Router({
   routes: [
@@ -45,14 +46,24 @@ export default new Router({
         {path: '/product/list', component: ProductList, name: '商品查询', menuShow: true},
       ]
     },
+    // {
+    //   path: '/',
+    //   name: 'test',
+    //   component: Home,
+    //   menuShow: true,
+    //   iconCls: 'iconfont icon-shangpinguanli', // 图标样式class
+    //   children: [
+    //     {path: '/test', component: test, name: 'test', menuShow: true},
+    //   ]
+    // },
     {
       path: '/',
-      name: 'test',
+      name: '订单管理',
       component: Home,
       menuShow: true,
       iconCls: 'iconfont icon-shangpinguanli', // 图标样式class
       children: [
-        {path: '/test', component: test, name: 'test', menuShow: true},
+        {path: '/order/order', component: Order, name: '用户下单', menuShow: true},
       ]
     },
   ]
