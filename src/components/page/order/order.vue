@@ -3,9 +3,9 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>
-        <a href="/">用户管理</a>
+        <a href="/">订单管理</a>
       </el-breadcrumb-item>
-      <el-breadcrumb-item>添加用户</el-breadcrumb-item>
+      <el-breadcrumb-item>用户下单</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="form-border" :model="orderForm" ref="orderForm">
       <el-breadcrumb class="clearfloat">
@@ -40,8 +40,9 @@
           show-summary
           :summary-method="getSummaries"
         >
-          <el-table-column prop="id" label="商品ID" align="center" width="80"></el-table-column>
-          <el-table-column prop="title" label="商品名称" align="center" width="300"></el-table-column>
+          <el-table-column prop="id" label="商品ID" align="center"></el-table-column>
+          <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+          <el-table-column prop="size" label="商品规格" align="center"></el-table-column>
           <el-table-column prop="price" label="单价" align="center" width="100"></el-table-column>
           <el-table-column prop="num" label="下单数量" align="center" width="100"></el-table-column>
           <el-table-column prop="amount" label="金额" align="center" width="100"></el-table-column>

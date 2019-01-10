@@ -33,7 +33,7 @@
             <el-button
               type="primary"
               icon="el-icon-circle-plus-outline"
-              @click="productFormVisible = true,button.showAddButton = true,button.showUpdateButton = true,productForm = {}"
+              @click="productFormVisible = true,button.showAddButton = true,button.showUpdateButton = false,productForm = {}"
             >添加商品</el-button>
           </el-col>
         </el-form-item>
