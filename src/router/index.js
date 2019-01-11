@@ -22,7 +22,7 @@ export default new Router({
       menuShow: true,
       iconCls: 'iconfont icon-shouye', // 图标样式class
       children: [
-        {path: '/dashboard', component: Dashboard, name: '首页', menuShow: true}
+        {path: '/dashboard', component: ProductList, name: '首页', menuShow: true}
       ]
     },
     {

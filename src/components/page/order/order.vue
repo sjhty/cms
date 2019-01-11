@@ -12,6 +12,7 @@
         <el-breadcrumb-item>基本信息</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="mainCon clearfloat">
+        <el-form-item>
         <el-col :span="6">
           <el-form-item label="收件人姓名">
             <el-col :span="14">
@@ -33,6 +34,8 @@
             </el-col>
           </el-form-item>
         </el-col>
+        </el-form-item>
+        <el-form-item>
         <el-table
           :data="orderProductData"
           style="width: 80%"
@@ -53,6 +56,12 @@
             </template>
           </el-table-column>
         </el-table>
+        </el-form-item>
+        <el-form-item>
+          <el-col>
+            <el-button type="primary" @click="submitOrder()">提交订单</el-button>
+          </el-col>
+        </el-form-item>
       </div>
       <el-breadcrumb class="clearfloat">
         <el-breadcrumb-item>请选择下单商品</el-breadcrumb-item>
@@ -220,6 +229,38 @@ export default {
     updateOrderProduct(row) {
       const self = this;
       self.showDialog(row);
+    },
+
+    submitOrder() {
+      const self = this;
+      if (self.orderForm.consignee == "") {
+        this.$message({
+          showClose: true,
+          message: '请填写收件人姓名',
+          type: 'error'
+        });
+
+        return;
+      }
+
+      if (self.orderForm.consigneeType == "") {
+        this.$message({
+          showClose: true,
+          message: '请选择收件人类型',
+          type: 'error'
+        });
+
+        return;
+      }
+      if (self.orderProductData.length <= 0) {
+        this.$message({
+          showClose: true,
+          message: '请添加下单商品',
+          type: 'error'
+        });
+
+        return;
+      }
     },
 
     dateFormat(row, column) {
