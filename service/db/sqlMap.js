@@ -10,7 +10,7 @@ var sqlMap = {
         update: 'update product set '
     },
     order: {
-        add: 'insert into orderList (consignee, consigneeType, orderProduct, totalAmount) values (?,?,?,?)',
+        add: 'insert into orderlist (consignee, consigneeType, orderProduct, totalAmount) values (?,?,?,?)',
         select: 'select * from orderList ', 
         update: 'update product set '
     }

@@ -13,49 +13,49 @@
       </el-breadcrumb>
       <div class="mainCon clearfloat">
         <el-form-item>
-        <el-col :span="6">
-          <el-form-item label="收件人姓名">
-            <el-col :span="14">
-              <el-input placeholder="请输入收件人姓名" v-model="orderForm.consignee"></el-input>
-            </el-col>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="收件人类型">
-            <el-col :span="12">
-              <el-select v-model="orderForm.consigneeType" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-col>
-          </el-form-item>
-        </el-col>
+          <el-col :span="6">
+            <el-form-item label="收件人姓名">
+              <el-col :span="14">
+                <el-input placeholder="请输入收件人姓名" v-model="orderForm.consignee"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="收件人类型">
+              <el-col :span="12">
+                <el-select v-model="orderForm.consigneeType" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+          </el-col>
         </el-form-item>
         <el-form-item>
-        <el-table
-          :data="orderProductData"
-          style="width: 80%"
-          border
-          show-summary
-          :summary-method="getSummaries"
-        >
-          <el-table-column prop="id" label="商品ID" align="center"></el-table-column>
-          <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
-          <el-table-column prop="size" label="商品规格" align="center"></el-table-column>
-          <el-table-column prop="price" label="单价" align="center" width="100"></el-table-column>
-          <el-table-column prop="num" label="下单数量" align="center" width="100"></el-table-column>
-          <el-table-column prop="amount" label="金额" align="center" width="100"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="150" align="center">
-            <template slot-scope="scope">
-              <el-button @click="updateOrderProduct(scope.row)" type="text" size="small">修改</el-button>
-              <el-button @click="deleteOrderProduct(scope.$index)" type="text" size="small">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+          <el-table
+            :data="orderProductData"
+            style="width: 80%"
+            border
+            show-summary
+            :summary-method="getSummaries"
+          >
+            <el-table-column prop="id" label="商品ID" align="center"></el-table-column>
+            <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+            <el-table-column prop="size" label="商品规格" align="center"></el-table-column>
+            <el-table-column prop="price" label="单价" align="center" width="100"></el-table-column>
+            <el-table-column prop="num" label="下单数量" align="center" width="100"></el-table-column>
+            <el-table-column prop="amount" label="金额" align="center" width="100"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="150" align="center">
+              <template slot-scope="scope">
+                <el-button @click="updateOrderProduct(scope.row)" type="text" size="small">修改</el-button>
+                <el-button @click="deleteOrderProduct(scope.$index)" type="text" size="small">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
         <el-form-item>
           <el-col>
@@ -109,7 +109,6 @@
             <el-input v-model="productForm.price" autocomplete="off" placeholder="请填写商品价格"></el-input>
           </el-col>
         </el-form-item>
-        </el-form-item>
         <el-form-item label="购买数量">
           <el-col :span="16">
             <el-input v-model="productForm.num" autocomplete="off" placeholder="请填写购买数量"></el-input>
@@ -151,8 +150,8 @@ export default {
         consignee: "",
         consigneeType: "",
         title: "",
-        orderProduct:[],
-        totalAmount:0
+        orderProduct: [],
+        totalAmount: 0
       },
       productFormVisible: false
     };
@@ -179,8 +178,8 @@ export default {
             }
           }, 0);
           sums[index] += " 元";
-          
-          self.orderForm.totalAmount = sums[index].replace(" 元","");
+
+          self.orderForm.totalAmount = sums[index].replace(" 元", "");
         } else {
           sums[index] = "--";
         }
@@ -215,14 +214,14 @@ export default {
     },
 
     addOrderProduct(formName) {
-      debugger
+      debugger;
       const self = this;
       let flag = true;
-      if (typeof(self.productForm.num) == "undefined") {
+      if (typeof self.productForm.num == "undefined") {
         this.$message({
           showClose: true,
-          message: '请填写购买数量',
-          type: 'error'
+          message: "请填写购买数量",
+          type: "error"
         });
 
         return;
@@ -258,8 +257,8 @@ export default {
       if (self.orderForm.consignee == "") {
         this.$message({
           showClose: true,
-          message: '请填写收件人姓名',
-          type: 'error'
+          message: "请填写收件人姓名",
+          type: "error"
         });
 
         return;
@@ -268,8 +267,8 @@ export default {
       if (self.orderForm.consigneeType == "") {
         this.$message({
           showClose: true,
-          message: '请选择收件人类型',
-          type: 'error'
+          message: "请选择收件人类型",
+          type: "error"
         });
 
         return;
@@ -277,14 +276,12 @@ export default {
       if (self.orderProductData.length <= 0) {
         this.$message({
           showClose: true,
-          message: '请添加下单商品',
-          type: 'error'
+          message: "请添加下单商品",
+          type: "error"
         });
 
         return;
       }
-
-      
 
       self.orderForm.orderProduct = JSON.stringify(self.orderProductData);
 
@@ -293,16 +290,24 @@ export default {
           self.$http
             .post("/api/order/addOrder", JSON.stringify(self.orderForm))
             .then(response => {
-              self.orderProductData.forEach(function(orderData,index){
-                  self.$http
-                    .post("/api/product/updateProductById", JSON.stringify(orderData))
-                    .then(response => {
-                      console.log(response);
-                    })
-                    .then(error => {
-                      console.log(error);
+              self.orderProductData.forEach(function(orderData, index) {
+                self.$http
+                  .post(
+                    "/api/product/updateProductById",
+                    JSON.stringify(orderData)
+                  )
+                  .then(response => {
+                    this.$message({
+                      showClose: true,
+                      message: "下单成功",
+                      type: "success"
                     });
-              })
+                    window.location = "/#/order/list";
+                  })
+                  .then(error => {
+                    console.log(error);
+                  });
+              });
             })
             .then(error => {
               console.log(error);

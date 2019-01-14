@@ -26,7 +26,7 @@
       <el-table-column prop="consignee" label="收件人" align="center"></el-table-column>
       <el-table-column prop="consigneeType" label="收件人类型" align="center" :formatter="typeFormat"></el-table-column>
       <el-table-column prop="totalAmount" label="总金额" align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建日期" align="center" :formatter="dateFormat"></el-table-column>
+      <el-table-column prop="createTime" label="创建日期" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">查看详情</el-button>
@@ -34,27 +34,27 @@
       </el-table-column>
     </el-table>
     <el-dialog title="订单详情" :visible.sync="orderFormVisible" width="40%">
-      <el-form-item label="收件人" :label-width="formLabelWidth">
-        <el-col :span="16"></el-col>
-      </el-form-item>
-      <el-form-item label="收件人类型" :label-width="formLabelWidth">
-        <el-col :span="16"></el-col>
-      </el-form-item>
-      <el-table :data="orderData" style="width: 100%" border>
-        <el-table-column prop="id" label="订单号" align="center"></el-table-column>
-        <el-table-column prop="consignee" label="收件人" align="center"></el-table-column>
-        <el-table-column prop="consigneeType" label="收件人类型" align="center"></el-table-column>
-        <el-table-column prop="totalAmount" label="总金额" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="创建日期" align="center" :formatter="dateFormat"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="150" align="center">
-          <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看详情</el-button>
-          </template>
-        </el-table-column>
+      <el-form class="form-border" :model="orderDetailsForm" ref="orderDetailsForm">
+        <el-form-item label="收件人" :label-width="formLabelWidth">
+          <el-col :span="16">{{orderDetailsForm.consignee}}</el-col>
+        </el-form-item>
+        <el-form-item label="收件人类型" :label-width="formLabelWidth">
+          <el-col :span="16">{{orderDetailsForm.consigneeType}}</el-col>
+        </el-form-item>
+        <el-form-item label="总金额" :label-width="formLabelWidth">
+          <el-col :span="16">{{orderDetailsForm.totalAmount}}</el-col>
+        </el-form-item>
+      </el-form>
+      <el-table :data="orderDetails" style="width: 100%" border>
+        <el-table-column prop="id" label="商品ID" align="center"></el-table-column>
+        <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+        <el-table-column prop="size" label="商品规格" align="center"></el-table-column>
+        <el-table-column prop="price" label="单价" align="center" width="100"></el-table-column>
+        <el-table-column prop="num" label="下单数量" align="center" width="100"></el-table-column>
+        <el-table-column prop="amount" label="金额" align="center" width="100"></el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button @click="orderFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -64,9 +64,11 @@ export default {
   data() {
     return {
       orderData: [],
+      orderDetails: [],
       orderForm: {
-        consignee:""
+        consignee: ""
       },
+      orderDetailsForm:{},
       orderFormVisible: false,
       formLabelWidth: "120px"
     };
@@ -74,27 +76,38 @@ export default {
   methods: {
     searchOrder(id) {
       const self = this;
-          self.$http
-            .post("/api/order/searchOrder", JSON.stringify(self.orderForm))
-            .then(response => {
-              self.orderData = response.body;
-            })
-            .then(error => {
-              console.log(error);
-            });
-        
+      self.$http
+        .post("/api/order/searchOrder", JSON.stringify(self.orderForm))
+        .then(response => {
+          self.orderData = response.body;
+        })
+        .then(error => {
+          console.log(error);
+        });
     },
 
     handleClick(row) {
-        let oid = {id:row.id};
-        self.$http
-            .post("/api/order/searchOrder", JSON.stringify(oid))
-            .then(response => {
-              self.orderData = response.body;
-            })
-            .then(error => {
-              console.log(error);
-            });
+      const self = this;
+      self.orderFormVisible = true;
+      let oid = { id: row.id };
+      self.$http
+        .post("/api/order/searchOrder", JSON.stringify(oid))
+        .then(response => {
+          console.log(response.body);
+          self.orderDetails = JSON.parse(response.body[0].orderProduct);
+          self.orderDetailsForm.consignee = response.body[0].consignee;
+          if (response.body[0].consigneeType == '1'){
+              self.orderDetailsForm.consigneeType = "代理"
+          } else if (response.body[0].consigneeType == '2') {
+              self.orderDetailsForm.consigneeType = '顾客'
+          }
+
+          self.orderDetailsForm.totalAmount = response.body[0].totalAmount;
+          
+        })
+        .then(error => {
+          console.log(error);
+        });
     },
 
     dateFormat(row, column) {
@@ -104,12 +117,11 @@ export default {
 
     typeFormat(row, column) {
       let tempType = row.consigneeType;
-      if (tempType == '1') {
-          return "代理"
-      } else if (tempType == '2') {
-          return "顾客"
+      if (tempType == "1") {
+        return "代理";
+      } else if (tempType == "2") {
+        return "顾客";
       }
-      
     }
   }
 };
