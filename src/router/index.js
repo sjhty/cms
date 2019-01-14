@@ -10,6 +10,7 @@ const AddUser = resolve => require(['@/components/page/user/add'], resolve)
 const ProductList = resolve => require(['@/components/page/product/list'], resolve)
 const test = resolve => require(['@/components/HelloWorld'], resolve)
 const Order = resolve => require(['@/components/page/order/order'], resolve)
+const OrderList = resolve => require(['@/components/page/order/list'], resolve)
 
 export default new Router({
   routes: [
@@ -63,7 +64,9 @@ export default new Router({
       menuShow: true,
       iconCls: 'iconfont icon-shangpinguanli', // 图标样式class
       children: [
+        {path: '/order/list', component: OrderList, name: '订单列表', menuShow: true},
         {path: '/order/order', component: Order, name: '用户下单', menuShow: true},
+        
       ]
     },
   ]

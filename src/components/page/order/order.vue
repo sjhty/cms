@@ -59,7 +59,7 @@
         </el-form-item>
         <el-form-item>
           <el-col>
-            <el-button type="primary" @click="submitOrder()">提交订单</el-button>
+            <el-button type="primary" @click="submitOrder('orderForm')">提交订单</el-button>
           </el-col>
         </el-form-item>
       </div>
@@ -104,6 +104,12 @@
             <label>{{productForm.stock}}</label>
           </el-col>
         </el-form-item>
+        <el-form-item label="商品单价">
+          <el-col :span="16">
+            <el-input v-model="productForm.price" autocomplete="off" placeholder="请填写商品价格"></el-input>
+          </el-col>
+        </el-form-item>
+        </el-form-item>
         <el-form-item label="购买数量">
           <el-col :span="16">
             <el-input v-model="productForm.num" autocomplete="off" placeholder="请填写购买数量"></el-input>
@@ -144,13 +150,16 @@ export default {
       orderForm: {
         consignee: "",
         consigneeType: "",
-        title: ""
+        title: "",
+        orderProduct:[],
+        totalAmount:0
       },
       productFormVisible: false
     };
   },
   methods: {
     getSummaries(param) {
+      const self = this;
       const { columns, data } = param;
       const sums = [];
       let values = [];
@@ -170,6 +179,8 @@ export default {
             }
           }, 0);
           sums[index] += " 元";
+          
+          self.orderForm.totalAmount = sums[index].replace(" 元","");
         } else {
           sums[index] = "--";
         }
@@ -204,9 +215,20 @@ export default {
     },
 
     addOrderProduct(formName) {
+      debugger
       const self = this;
       let flag = true;
+      if (typeof(self.productForm.num) == "undefined") {
+        this.$message({
+          showClose: true,
+          message: '请填写购买数量',
+          type: 'error'
+        });
+
+        return;
+      }
       self.productForm.amount = self.productForm.price * self.productForm.num;
+      self.productForm.stock = self.productForm.stock - self.productForm.num;
       self.orderProductData.forEach(function(pro, index) {
         if (pro.id == self.productForm.id) {
           flag = false;
@@ -231,7 +253,7 @@ export default {
       self.showDialog(row);
     },
 
-    submitOrder() {
+    submitOrder(formName) {
       const self = this;
       if (self.orderForm.consignee == "") {
         this.$message({
@@ -261,6 +283,35 @@ export default {
 
         return;
       }
+
+      
+
+      self.orderForm.orderProduct = JSON.stringify(self.orderProductData);
+
+      self.$refs[formName].validate(valid => {
+        if (valid) {
+          self.$http
+            .post("/api/order/addOrder", JSON.stringify(self.orderForm))
+            .then(response => {
+              self.orderProductData.forEach(function(orderData,index){
+                  self.$http
+                    .post("/api/product/updateProductById", JSON.stringify(orderData))
+                    .then(response => {
+                      console.log(response);
+                    })
+                    .then(error => {
+                      console.log(error);
+                    });
+              })
+            })
+            .then(error => {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
 
     dateFormat(row, column) {
