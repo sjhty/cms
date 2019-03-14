@@ -11,6 +11,7 @@ const ProductList = resolve => require(['@/components/page/product/list'], resol
 const test = resolve => require(['@/components/HelloWorld'], resolve)
 const Order = resolve => require(['@/components/page/order/order'], resolve)
 const OrderList = resolve => require(['@/components/page/order/list'], resolve)
+const CategoryList = resolve => require(['@/components/page/product/category_list'], resolve)
 
 export default new Router({
   routes: [
@@ -45,6 +46,7 @@ export default new Router({
       iconCls: 'iconfont icon-shangpinguanli', // 图标样式class
       children: [
         {path: '/product/list', component: ProductList, name: '商品查询', menuShow: true},
+        {path: '/product/category_list', component: CategoryList, name: '品类查询', menuShow: true}
       ]
     },
     // {

@@ -3,7 +3,7 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>
-        <a href="/">用户管理</a>
+        <a href="/">商品管理</a>
       </el-breadcrumb-item>
       <el-breadcrumb-item>商品查询</el-breadcrumb-item>
     </el-breadcrumb>

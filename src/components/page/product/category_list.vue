@@ -3,9 +3,9 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>
-        <a href="/">用户管理</a>
+        <a href="/">商品管理</a>
       </el-breadcrumb-item>
-      <el-breadcrumb-item>商品查询</el-breadcrumb-item>
+      <el-breadcrumb-item>商品分类查询</el-breadcrumb-item>
     </el-breadcrumb>
     <el-form class="form-border" :model="searchForm" ref="searchForm">
       <div class="serchParam">
@@ -20,7 +20,7 @@
           <el-col :span="7">
             <el-form-item label="商品名称">
               <el-col :span="35">
-                <el-input placeholder="请输入商品名称" v-model="searchForm.title"></el-input>
+                <el-input placeholder="请输入商品名称" v-model="searchForm.catefory_name"></el-input>
               </el-col>
             </el-form-item>
           </el-col>
@@ -40,19 +40,13 @@
       </div>
     </el-form>
     <el-table :data="userData" style="width: 100%" border>
-      <el-table-column prop="id" label="商品ID" align="center" width="80"></el-table-column>
+      <el-table-column prop="id" label="品类ID" align="center" width="80"></el-table-column>
       <!-- <el-table-column prop="sku" label="商品SKU" align="center"></el-table-column> -->
-      <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
-      <el-table-column prop="price" label="零售价" align="center" width="80"></el-table-column>
-      <el-table-column prop="minister_price" label="部长拿货价" align="center" width="80"></el-table-column>
-      <el-table-column prop="director_price" label="理事拿货价" align="center" width="80"></el-table-column>
-      <el-table-column prop="president_price" label="社长拿货价" align="center" width="80"></el-table-column>
-      <el-table-column prop="size" label="规格" align="center" width="50"></el-table-column>
-      <el-table-column prop="stock" label="库存" align="center" width="50"></el-table-column>
-      <!-- <el-table-column prop="salesType" label="销售类型" align="center"></el-table-column> -->
-      <el-table-column prop="supplier" label="供货商" align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建日期" align="center" :formatter="dateFormat"></el-table-column>
-      <el-table-column prop="modifyTime" label="修改日期" align="center" :formatter="dateFormat"></el-table-column>
+      <el-table-column prop="category_name" label="品类名称" align="center"></el-table-column>
+      <el-table-column prop="price" label="零售价" align="center"></el-table-column>
+      <el-table-column prop="minister_price" label="部长拿货价" align="center"></el-table-column>
+      <el-table-column prop="director_price" label="理事拿货价" align="center"></el-table-column>
+      <el-table-column prop="president_price" label="社长拿货价" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button @click="searchProductById(scope.row.id)" type="text" size="small">查看</el-button>
@@ -61,21 +55,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="添加商品" :visible.sync="productFormVisible" width="40%">
+    <el-dialog title="添加品类" :visible.sync="productFormVisible" width="40%">
       <el-form :model="productForm" ref="productForm">
-        <el-form-item label="商品名称" :label-width="formLabelWidth">
+        <el-form-item label="品类名称" :label-width="formLabelWidth">
           <el-col :span="16">
-            <el-input v-model="productForm.title" autocomplete="off"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="商品规格" :label-width="formLabelWidth">
-          <el-col :span="16">
-            <el-input v-model="productForm.size" autocomplete="off"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="商品图片" :label-width="formLabelWidth">
-          <el-col :span="16">
-            <el-input v-model="productForm.imgUrl" autocomplete="off"></el-input>
+            <el-input v-model="productForm.category_name" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="零售价" :label-width="formLabelWidth">
@@ -96,16 +80,6 @@
         <el-form-item label="社长拿货价" :label-width="formLabelWidth">
           <el-col :span="16">
             <el-input v-model="productForm.president_price" autocomplete="off"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="数量" :label-width="formLabelWidth">
-          <el-col :span="16">
-            <el-input v-model="productForm.stock" autocomplete="off"></el-input>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="供货商" :label-width="formLabelWidth">
-          <el-col :span="16">
-            <el-input v-model="productForm.supplier" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
       </el-form>
@@ -135,15 +109,14 @@ export default {
       productFormVisible: false,
       searchForm: {
         id: "",
-        title: ""
+        category_name: ""
       },
       productForm: {
-        title: "",
-        size: "",
-        imgUrl: "",
+        category_name: "",
         price: 0,
-        stock: 0,
-        supplier: ""
+        minister_price: 0,
+        director_price: 0,
+        president_price: 0
       },
       formLabelWidth: "120px",
       button: {
@@ -161,10 +134,11 @@ export default {
         if (valid) {
           console.log(JSON.stringify(self.productForm));
           self.$http
-            .post("/api/product/addProduct", JSON.stringify(self.productForm))
+            .post("/api/category/addCategory", JSON.stringify(self.productForm))
             .then(response => {
               console.log(response);
               self.productFormVisible = false;
+              self.searchProduct(formName)
             })
             .then(error => {
               console.log(error);
@@ -181,7 +155,7 @@ export default {
       self.$refs[formName].validate(valid => {
         if (valid) {
           self.$http
-            .post("/api/product/searchProduct", JSON.stringify(self.searchForm))
+            .post("/api/category/searchCategory", JSON.stringify(self.searchForm))
             .then(response => {
               self.userData = response.body;
             })
@@ -198,7 +172,7 @@ export default {
     searchProductById(pid) {
       const self = this;
       self.$http
-        .post("/api/product/searchProductById", JSON.stringify({ id: pid }))
+        .post("/api/category/searchCategoryById", JSON.stringify({ id: pid }))
         .then(response => {
           console.log(response);
           self.productForm = response.body[0];
@@ -219,7 +193,7 @@ export default {
     updateproduct(formName) {
       const self = this;
       self.$http
-        .post("/api/product/updateProductById", JSON.stringify(self.productForm))
+        .post("/api/category/updateCategoryById", JSON.stringify(self.productForm))
         .then(response => {
           console.log(response);
           self.searchProduct(formName);
@@ -233,7 +207,7 @@ export default {
     deleteProductById(pid) {
       const self = this;
       self.$http
-        .post("/api/product/deteleProductById", JSON.stringify(self.productForm))
+        .post("/api/category/deteleCategoryById", JSON.stringify(self.productForm))
         .then(response => {
           console.log(response);
           self.searchProduct(formName);
