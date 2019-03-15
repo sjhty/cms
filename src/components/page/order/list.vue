@@ -16,6 +16,19 @@
             </el-col>
           </el-form-item>
         </el-col>
+        <el-col :span="10">
+          <el-form-item label="时间范围">
+            <el-col :span="30">
+              <el-date-picker
+                v-model="orderForm.dateRange"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+            </el-col>
+          </el-form-item>
+        </el-col>
         <el-col :span="3">
           <el-button type="primary" icon="el-icon-search" @click="searchOrder('orderForm')">搜索</el-button>
         </el-col>

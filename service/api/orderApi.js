@@ -40,10 +40,15 @@ router.post('/addOrder', (req, res) => {
 router.post('/searchOrder', (req, res) => {
     var sql = $sql.order.select;
     var params = req.body;
-    if (params.consignee) {
-        sql += "where consignee = " + params.consignee
-    } else if (params.id) {
-        sql += "where id = " + params.id
+    console.log(params)
+    if (params.consignee && params.dateRange) {
+        sql += "where consignee = '" + params.consignee + "' and createTime between '"+ params.dateRange[0] +"' and '" + params.dateRange[1] + "'"
+    } else {
+        if (params.consignee) {
+            sql += "where consignee = '" + params.consignee + "'"
+        } else if (params.dateRange) {
+            sql += "where createTime between '"+ params.dateRange[0] +"' and '" + params.dateRange[1] + "'"
+        }
     }
     conn.query(sql, function(err, result) {
         if (err) {
