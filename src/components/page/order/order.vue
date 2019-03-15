@@ -46,7 +46,7 @@
             <el-table-column prop="id" label="商品ID" align="center"></el-table-column>
             <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
             <el-table-column prop="size" label="商品规格" align="center"></el-table-column>
-            <el-table-column prop="price" label="单价" align="center" width="100"></el-table-column>
+            <el-table-column prop="relPrice" label="拿货价" align="center" width="100" ng-if=""></el-table-column>
             <el-table-column prop="num" label="下单数量" align="center" width="100"></el-table-column>
             <el-table-column prop="amount" label="金额" align="center" width="100"></el-table-column>
             <el-table-column fixed="right" label="操作" width="150" align="center">
@@ -81,12 +81,15 @@
           <el-table-column prop="id" label="商品ID" align="center" width="80"></el-table-column>
           <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
           <el-table-column prop="price" label="零售价" align="center" width="80"></el-table-column>
+          <el-table-column prop="minister_price" label="部长拿货价" align="center" width="80"></el-table-column>
+          <el-table-column prop="director_price" label="理事拿货价" align="center" width="80"></el-table-column>
+          <el-table-column prop="president_price" label="社长拿货价" align="center" width="80"></el-table-column>
           <el-table-column prop="size" label="规格" align="center" width="50"></el-table-column>
           <el-table-column prop="stock" label="库存" align="center" width="50"></el-table-column>
           <el-table-column prop="supplier" label="供货商" align="center"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template slot-scope="scope">
-              <el-button @click="showDialog(scope.row)" type="text" size="small">选择</el-button>
+              <el-button @click="showDialog(scope.row,'add')" type="text" size="small">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -101,12 +104,12 @@
         </el-form-item>
         <el-form-item label="剩余库存">
           <el-col :span="16">
-            <label>{{productForm.stock}}</label>
+            <label>{{productForm.relStock}}</label>
           </el-col>
         </el-form-item>
-        <el-form-item label="商品单价">
+        <el-form-item label="拿货价">
           <el-col :span="16">
-            <el-input v-model="productForm.price" autocomplete="off" placeholder="请填写商品价格"></el-input>
+            <el-input v-model="productForm.relPrice" autocomplete="off" placeholder="请填写商品价格" disabled></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="购买数量">
@@ -131,24 +134,32 @@ export default {
       options: [
         {
           value: "1",
-          label: "代理"
+          label: "顾客"
         },
         {
           value: "2",
-          label: "顾客"
-        }
+          label: "部长"
+        },
+        {
+          value: "3",
+          label: "理事"
+        },
+        {
+          value: "4",
+          label: "社长"
+        },
       ],
       productForm: {
         id: 0,
         title: "",
         size: "",
-        price: 0,
-        stock: 0,
+        relPrice: 0,
+        relStock: 0,
         num: 0
       },
       orderForm: {
         consignee: "",
-        consigneeType: "",
+        consigneeType: "1",
         title: "",
         orderProduct: [],
         totalAmount: 0
@@ -207,14 +218,27 @@ export default {
       });
     },
 
-    showDialog(row) {
+    showDialog(row,option) {
       const self = this;
       self.productForm = row;
+      if (self.orderForm.consigneeType == "1"){
+          self.productForm.relPrice = row.price;
+      } else if (self.orderForm.consigneeType == "2"){
+          self.productForm.relPrice = row.minister_price;
+      } else if (self.orderForm.consigneeType == "3"){
+          self.productForm.relPrice = row.director_price;
+      } else if (self.orderForm.consigneeType == "4"){
+          self.productForm.relPrice = row.president_price;
+      }
+
+      if (option == "add"){
+          self.productForm.relStock = row.stock
+      }
+      
       self.productFormVisible = true;
     },
 
     addOrderProduct(formName) {
-      debugger;
       const self = this;
       let flag = true;
       if (typeof self.productForm.num == "undefined") {
@@ -226,16 +250,15 @@ export default {
 
         return;
       }
-      self.productForm.amount = self.productForm.price * self.productForm.num;
-      self.productForm.stock = self.productForm.stock - self.productForm.num;
+      self.productForm.amount = self.productForm.relPrice * self.productForm.num;
+      self.productForm.relStock = self.productForm.stock - self.productForm.num;
       self.orderProductData.forEach(function(pro, index) {
         if (pro.id == self.productForm.id) {
-          flag = false;
+          self.orderProductData.splice(index,1)
         }
       });
-      if (flag) {
-        self.orderProductData.push(self.productForm);
-      }
+
+      self.orderProductData.push(self.productForm);
 
       self.productFormVisible = false;
     },
@@ -249,7 +272,7 @@ export default {
 
     updateOrderProduct(row) {
       const self = this;
-      self.showDialog(row);
+      self.showDialog(row,'update');
     },
 
     submitOrder(formName) {
@@ -297,7 +320,7 @@ export default {
                     JSON.stringify(orderData)
                   )
                   .then(response => {
-                    this.$message({
+                    self.$message({
                       showClose: true,
                       message: "下单成功",
                       type: "success"

@@ -87,7 +87,7 @@ router.post('/updateProductById', (req, res) => {
     var sql = $sql.product.update;
     var params = req.body;
     if (params.id) {
-        sql += "title = '"+ params.title +"',size = '"+ params.size +"',imgUrl = '" + params.imgUrl + "',price = "+ params.price +",minister_price = "+ params.minister_price +",director_price = "+ params.director_price +",president_price = "+ params.president_price +",stock = "+params.stock+",supplier = '"+params.supplier+"' where id = " + params.id
+        sql += "title = '"+ params.title +"',size = '"+ params.size +"',imgUrl = '" + params.imgUrl + "',stock = "+params.stock+",supplier = '"+params.supplier+"' where id = " + params.id
     }
     conn.query(sql, function(err, result) {
         if (err) {

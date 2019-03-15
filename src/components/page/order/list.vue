@@ -26,7 +26,7 @@
       <el-table-column prop="consignee" label="收件人" align="center"></el-table-column>
       <el-table-column prop="consigneeType" label="收件人类型" align="center" :formatter="typeFormat"></el-table-column>
       <el-table-column prop="totalAmount" label="总金额" align="center"></el-table-column>
-      <el-table-column prop="createTime" label="创建日期" align="center"></el-table-column>
+      <el-table-column prop="createTime" label="创建日期" align="center" :formatter="dateFormat"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">查看详情</el-button>
@@ -49,7 +49,7 @@
         <el-table-column prop="id" label="商品ID" align="center"></el-table-column>
         <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
         <el-table-column prop="size" label="商品规格" align="center"></el-table-column>
-        <el-table-column prop="price" label="单价" align="center" width="100"></el-table-column>
+        <el-table-column prop="relPrice" label="拿货价" align="center" width="100"></el-table-column>
         <el-table-column prop="num" label="下单数量" align="center" width="100"></el-table-column>
         <el-table-column prop="amount" label="金额" align="center" width="100"></el-table-column>
       </el-table>
@@ -97,9 +97,13 @@ export default {
           self.orderDetails = JSON.parse(response.body[0].orderProduct);
           self.orderDetailsForm.consignee = response.body[0].consignee;
           if (response.body[0].consigneeType == '1'){
-              self.orderDetailsForm.consigneeType = "代理"
+              self.orderDetailsForm.consigneeType = "顾客"
           } else if (response.body[0].consigneeType == '2') {
-              self.orderDetailsForm.consigneeType = '顾客'
+              self.orderDetailsForm.consigneeType = '部长'
+          } else if (response.body[0].consigneeType == '3') {
+              self.orderDetailsForm.consigneeType = '理事'
+          } else if (response.body[0].consigneeType == '4') {
+              self.orderDetailsForm.consigneeType = '社长'
           }
 
           self.orderDetailsForm.totalAmount = response.body[0].totalAmount;
@@ -118,9 +122,13 @@ export default {
     typeFormat(row, column) {
       let tempType = row.consigneeType;
       if (tempType == "1") {
-        return "代理";
-      } else if (tempType == "2") {
         return "顾客";
+      } else if (tempType == "2") {
+        return "部长";
+      } else if (tempType == "3") {
+        return "理事";
+      } else if (tempType == "4") {
+        return "社长";
       }
     }
   }
