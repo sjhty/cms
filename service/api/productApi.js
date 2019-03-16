@@ -44,9 +44,9 @@ router.post('/searchProduct', (req, res) => {
         sql += " where a.category_id=b.id and a.id = " + params.id + " and a.title like '%" + params.title +"%'"
     } else {
         if (params.id) {
-            sql += " where a.category_id=b.id a.id = " + params.id
+            sql += " where a.category_id=b.id and a.id = " + params.id
         } else if (params.title) {
-            sql += " where a.category_id=b.id a.title like '%" + params.title +"%'"
+            sql += " where a.category_id=b.id and a.title like '%" + params.title +"%'"
         } else {
             sql += " where a.category_id=b.id"
         }

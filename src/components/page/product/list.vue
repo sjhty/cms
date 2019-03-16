@@ -78,7 +78,7 @@
             <el-input v-model="productForm.imgUrl" autocomplete="off"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="零售价" :label-width="formLabelWidth">
+        <!-- <el-form-item label="零售价" :label-width="formLabelWidth">
           <el-col :span="16">
             <el-input v-model="productForm.price" autocomplete="off"></el-input>
           </el-col>
@@ -97,7 +97,7 @@
           <el-col :span="16">
             <el-input v-model="productForm.president_price" autocomplete="off"></el-input>
           </el-col>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="数量" :label-width="formLabelWidth">
           <el-col :span="16">
             <el-input v-model="productForm.stock" autocomplete="off"></el-input>
